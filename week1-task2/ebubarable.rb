@@ -1,8 +1,9 @@
 module Ebuberable
 
-  def map
+  def map(&block)
+    block ||= :itself.to_proc
     result = []
-    self.each { |e| result << yield(e) }
+    self.each { |e| result << block.call(e) }
     result
   end
 
@@ -21,26 +22,30 @@ module Ebuberable
   def grep(p)
     result = []
     self.each do |e|
-      if p === e
-        if block_given?
-          e = yield(e)
-        end
-        result << e
-      end
+      next unless p === e
+      e = yield(e) if block_given?
+      result << e
     end
     result
   end
 
   def all?(&block)
-    block = lambda {|obj| obj} unless block_given?
+    block ||= :itself.to_proc
     self.each { |e| return false unless block.call(e) }
     true
   end
 
-  def reduce(initial = nil)
+  def reduce1(*p)
+    if Symbol === p[0]
+      op = p[0]
+    else
+      initial = p[0]
+      op = p[1]
+    end
+
     self.each do |e|
       if initial
-        initial = yield(initial, e)
+        initial = op ? e.send(op, initial) : yield(initial, e)
       else
         initial = e
       end
