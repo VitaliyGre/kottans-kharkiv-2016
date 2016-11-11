@@ -7,21 +7,16 @@ class Position
 
   def to_proc
     Proc.new do |e|
-      r = @hash_of_pieces[e] || :empty
-      [e, r]
+      [e, @hash_of_pieces[e] || :empty]
     end
   end
 
   def occupied(piece = nil)
     if piece
       piece = piece.to_s
-      Proc.new do |e|
-        @hash_of_pieces[e].to_s.include? piece
-      end
+      Proc.new { |e| @hash_of_pieces[e].to_s.include? piece }
     else
-      Proc.new do |e|
-        @hash_of_pieces.key?(e)
-      end
+      Proc.new { |e| @hash_of_pieces.key?(e) }
     end
   end
 end

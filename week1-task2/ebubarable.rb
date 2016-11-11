@@ -1,9 +1,9 @@
 module Ebuberable
 
-  def map(&block)
-    block ||= :itself.to_proc
+  def map
+    return self.each unless block_given?
     result = []
-    self.each { |e| result << block.call(e) }
+    self.each { |e| result << yield(e) }
     result
   end
 
@@ -39,8 +39,7 @@ module Ebuberable
     if Symbol === p[0]
       op = p[0]
     else
-      initial = p[0]
-      op = p[1]
+      initial, op = p
     end
 
     self.each do |e|
