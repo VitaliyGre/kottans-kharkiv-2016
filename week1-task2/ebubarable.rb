@@ -35,20 +35,16 @@ module Ebuberable
     true
   end
 
-  def reduce1(*p)
-    if Symbol === p[0]
+  def reduce(*p, &block)
+    if p[0].is_a?(Symbol)
       op = p[0]
     else
       initial, op = p
     end
 
-    self.each do |e|
-      if initial
-        initial = op ? e.send(op, initial) : yield(initial, e)
-      else
-        initial = e
-      end
-    end
+    block ||= op.to_proc
+    self.each { |e| initial = initial ? block.call(initial, e) : e }
+
     initial
   end
 
