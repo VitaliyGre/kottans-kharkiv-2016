@@ -1,4 +1,5 @@
 require 'rspec'
+require 'rspec/its'
 require_relative '../week2-task3/wombat'
 require 'matchers'
 
@@ -6,33 +7,21 @@ describe 'Wombat' do
 
   subject(:wombat) { Wombat.new }
 
-  let(:burrow) {Burrow.new(wombat)}
-  let(:other_burrow) {Burrow.new(Wombat.new)}
+  let(:burrow) { Burrow.new(wombat) }
+  let(:other_burrow) { Burrow.new(Wombat.new) }
 
-  it 'exists' do
-    expect(wombat).not_to eq nil
-  end
+  it { is_expected.not_to be_nil }
 
-  it 'lives in Australia' do
-    expect(wombat.home).to eq 'Australia'
-  end
+  its(:home) { is_expected.to eq 'Australia' }
 
-  it 'does not live in Austria' do
-    expect(wombat.home).not_to eq 'Austria'
-  end
+  describe 'characteristics' do
+    its (:length) { is_expected.to be_within(30).of(100) }
 
-  context 'characteristics' do
-    it 'length /cm/' do
-      expect(wombat.length).to be_within(70).of(130)
+    it 'weight' do
+      expect(20..45).to cover wombat.weight
     end
 
-    it 'weight /kg/' do
-      expect(wombat.weight).to be_within(20).of(45)
-    end
-
-    it 'marsupial' do
-      expect(wombat.marsupial?).to eq true
-    end
+    it { is_expected.to be_marsupial }
 
     it 'can run' do
       expect(wombat).to respond_to(:run)
@@ -44,11 +33,24 @@ describe 'Wombat' do
   end
 
   it 'eats grasses' do
-    expect(wombat.eat 'grasses').to eq true
+    expect(wombat.eat 'grasses').not_to be_nil
   end
 
   it 'does not eat meat' do
-    expect(wombat.eat 'meat').to eq false
+    expect(wombat.eat 'meat').to be_nil
+  end
+
+  it 'eats grasses and becomes fed' do
+    expect { wombat.eat('grasses') }.to change(wombat, :hungry?).from(true).to(false)
+  end
+
+  it 'does not eat meat and stays hungry' do
+    expect{wombat.eat('meat')}.to_not change{wombat.hungry?}.from(true)
+  end
+
+  it 'eats and becomes hungry after 14 days' do
+    wombat.eat('grasses', Date.today - 15)
+    expect(wombat.hungry?).to be_truthy
   end
 
   it 'needs a few water' do
@@ -60,11 +62,11 @@ describe 'Wombat' do
   end
 
   it 'lives in his burrow' do
-    expect(wombat).to lives_in_burrow(burrow)
+    expect(wombat).to live_in burrow
   end
 
   it 'does not live in other burrow' do
-    expect(wombat).not_to lives_in_burrow(other_burrow)
+    expect(wombat).not_to live_in other_burrow
   end
 
 end

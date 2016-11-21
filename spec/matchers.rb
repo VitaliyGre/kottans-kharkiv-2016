@@ -4,7 +4,7 @@ RSpec::Matchers.define :get_enough_water do |water|
   end
 end
 
-RSpec::Matchers.define :lives_in_burrow do |burrow|
+RSpec::Matchers.define :live_in do |burrow|
   match do |wombat|
     burrow.wombat == wombat
   end

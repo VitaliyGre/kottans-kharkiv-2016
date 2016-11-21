@@ -1,12 +1,17 @@
+require 'date'
 class Wombat
   MEALS = %w[grasses sedges herbs bark roots]
+
+  def initialize
+    @meal_date = Date.new(0)
+  end
 
   def home
     'Australia'
   end
 
   def length
-    100
+    110
   end
 
   def weight
@@ -21,9 +26,14 @@ class Wombat
     true
   end
 
-  def eat(meal)
-    MEALS.include? meal
+  def eat(meal, date = Date.today)
+    @meal_date = date if MEALS.include? meal
   end
+
+  def hungry?
+    Date.today > @meal_date + 14
+  end
+
 end
 
 class Burrow
