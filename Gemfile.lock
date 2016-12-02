@@ -1,13 +1,17 @@
 GEM
-  remote: https://rubygems.org/
+  remote: http://rubygems.org/
   specs:
     holidays (5.1.0)
+    pg (0.19.0)
+    pg (0.19.0-x86-mingw32)
 
 PLATFORMS
   ruby
+  x86-mingw32
 
 DEPENDENCIES
   holidays
+  pg
 
 BUNDLED WITH
    1.13.3
