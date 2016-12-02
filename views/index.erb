@@ -1,0 +1,17 @@
+<form action="link" method="post" class="form-inline" name="message_form" onsubmit="return validateForm()">
+  <div class="form-group">
+    <label for="message" style="font-weight: bold">Enter your message:</label>
+    <input type="text" name="message" id="message"><br/><br/>
+  </div>
+  <input type="submit" value="Save">
+</form>
+
+<script>
+  function validateForm() {
+    var x = document.forms["message_form"]["message"].value;
+    if (x == null || x == "") {
+      alert("You should add message");
+      return false;
+    }
+  }
+</script>
